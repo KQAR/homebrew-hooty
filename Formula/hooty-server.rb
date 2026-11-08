@@ -1,9 +1,11 @@
 # hooty-server — the macOS host daemon, for a machine with no graphical session.
 #
-# It was `coda-server` until 0.0.29. `formula_renames.json` maps the old name here, so
-# `brew install KQAR/coda/coda-server` still installs it and an installed one is migrated on
-# the next `brew update`; and `coda-server` is linked to the same binary, so a script or a
-# habit that says the old name keeps working.
+# It was `coda-server` until 0.0.29, and the old name stays twice over: `coda-server` is linked
+# to the same binary, so a script or a habit that says it keeps working, and
+# `Formula/coda-server.rb` is this file with its class and conflict swapped (the release writes
+# it), so `brew install KQAR/coda/coda-server` keeps installing and an installed one upgrades in
+# place. A file rather than `formula_renames.json`: Homebrew 7 trusts a tap only for the name
+# typed, and refuses a typed name that resolves to another.
 #
 # Binary-only, because Hooty is closed source. That is why this tap exists at all: a
 # third-party tap may ship a prebuilt archive, homebrew-core may not. The tarball is cut by
@@ -26,6 +28,9 @@ class HootyServer < Formula
   # Package.swift's floor: Network.framework's QUIC is what carries the wire, and the daemon
   # is macOS-only by measurement rather than preference (ARCHITECTURE.md).
   depends_on macos: :tahoe
+
+  # The same binary under the other name (above): one daemon, one port.
+  conflicts_with "coda-server", because: "both install hooty-server and coda-server"
 
   # Herdr and Orca are *discovered* at runtime and never launched by coda — a machine with
   # neither still pairs and still answers. So neither is a dependency here.

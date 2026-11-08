@@ -2,9 +2,15 @@
 #
 # This is `cask.rb.in`: `server/release.sh` fills in the version, the url and the sha256 and
 # writes the result to `server/dist/hooty.rb`, which is what goes into `Casks/hooty.rb` in the
-# tap. It was the `coda` cask until 0.0.29; the tap's `cask_renames.json` maps the old token
-# here, so `brew install --cask KQAR/coda/coda` installs this and an installed `coda` is
-# migrated on the next `brew update`. It is templated *here*, beside the app, for the same reason `install.sh.in` is: the
+# tap — and, with the token `coda`, into `Casks/coda.rb` beside it.
+#
+# **The old token is a file, not a rename.** It was the `coda` cask until 0.0.29, and
+# `brew install --cask KQAR/coda/coda` has to keep installing. A `cask_renames.json` entry
+# cannot do that under Homebrew 7: a tap is trusted only for the name typed on the command
+# line (`Homebrew::Trust.explicitly_allowed?` compares ARGV with the *resolved* name), so
+# `kqar/coda/coda` resolving to `kqar/coda/hooty` is refused as untrusted. So the release
+# writes this template twice, `hooty` `hooty` and `coda`, the same image under both, each
+# conflicting with the other; an installed `coda` upgrades in place under its own token. It is templated *here*, beside the app, for the same reason `install.sh.in` is: the
 # caveats and the `zap` list describe what this app does to the machine, and they have to
 # change in the commit that changes it, not in another repository afterwards.
 #
@@ -49,6 +55,8 @@ cask "hooty" do
   # with `--greedy` — otherwise the two would take turns replacing one bundle, and Homebrew's
   # idea of the installed version would be whichever of them went last.
   auto_updates true
+  # The same app under the other token (above): one Hooty.app, one daemon, one port.
+  conflicts_with cask: "coda"
   depends_on arch: :arm64
   depends_on macos: :tahoe
 
