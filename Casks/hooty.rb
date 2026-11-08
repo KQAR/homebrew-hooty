@@ -11,7 +11,7 @@
 #
 # The stanza order below is Homebrew's, not a preference: `brew style`'s Cask/StanzaOrder cop
 # rejects any other, and `livecheck` in particular belongs above `depends_on`.
-cask "coda" do
+cask "hooty" do
   version "0.0.28"
   sha256 "cefa9ce776b3f1dffc1516e48ae80629f731c78e5115f30aab027696e9f4903d"
 
