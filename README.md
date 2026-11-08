@@ -5,7 +5,7 @@ Homebrew tap for **Hooty** — drive the coding agents on your Mac from your pho
 Hooty was called coda until 0.0.29, and this tap was `KQAR/homebrew-coda`. The old names
 still work: GitHub redirects the old repository, and `Casks/coda.rb` and
 `Formula/coda-server.rb` are kept beside `hooty` and `hooty-server` — the same release under
-the old name, each conflicting with its twin — so `brew install --cask KQAR/coda/coda`
+the old name — so `brew install --cask KQAR/coda/coda`
 installs Hooty and an installed `coda` or `coda-server` upgrades in place. (Not renames:
 Homebrew 7 trusts a tap only for the name you type, and refuses an old name that resolves to a
 new one.) `coda-server` is linked to the same binary as `hooty-server`. An app installed as

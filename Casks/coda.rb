@@ -9,8 +9,11 @@
 # cannot do that under Homebrew 7: a tap is trusted only for the name typed on the command
 # line (`Homebrew::Trust.explicitly_allowed?` compares ARGV with the *resolved* name), so
 # `kqar/coda/coda` resolving to `kqar/coda/hooty` is refused as untrusted. So the release
-# writes this template twice, `coda` `hooty` and `coda`, the same image under both, each
-# conflicting with the other; an installed `coda` upgrades in place under its own token. It is templated *here*, beside the app, for the same reason `install.sh.in` is: the
+# writes this template twice, `coda` `hooty` and `coda`, the same image under both; an
+# installed `coda` upgrades in place under its own token. No `conflicts_with` between the two:
+# on a Mac that has the old tap renamed to `kqar/hooty` *and* `kqar/coda` tapped again by the
+# old command, a bare `hooty` names a cask in two taps and the check itself fails — and the
+# second install is refused anyway, by the `Hooty.app` the first one put in /Applications. It is templated *here*, beside the app, for the same reason `install.sh.in` is: the
 # caveats and the `zap` list describe what this app does to the machine, and they have to
 # change in the commit that changes it, not in another repository afterwards.
 #
@@ -55,8 +58,6 @@ cask "coda" do
   # with `--greedy` — otherwise the two would take turns replacing one bundle, and Homebrew's
   # idea of the installed version would be whichever of them went last.
   auto_updates true
-  # The same app under the other token (above): one Hooty.app, one daemon, one port.
-  conflicts_with cask: "hooty"
   depends_on arch: :arm64
   depends_on macos: :tahoe
 
