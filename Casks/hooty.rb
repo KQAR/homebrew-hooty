@@ -1,30 +1,32 @@
-# coda — the macOS host daemon, in the menu bar.
+# Hooty — the macOS host daemon, in the menu bar.
 #
 # This is `cask.rb.in`: `server/release.sh` fills in the version, the url and the sha256 and
-# writes the result to `server/dist/coda.rb`, which is what goes into `Casks/coda.rb` in the
-# tap. It is templated *here*, beside the app, for the same reason `install.sh.in` is: the
+# writes the result to `server/dist/hooty.rb`, which is what goes into `Casks/hooty.rb` in the
+# tap. It was the `coda` cask until 0.0.29; the tap's `cask_renames.json` maps the old token
+# here, so `brew install --cask KQAR/coda/coda` installs this and an installed `coda` is
+# migrated on the next `brew update`. It is templated *here*, beside the app, for the same reason `install.sh.in` is: the
 # caveats and the `zap` list describe what this app does to the machine, and they have to
 # change in the commit that changes it, not in another repository afterwards.
 #
-# A cask rather than a formula because this is an app bundle. `Formula/coda-server.rb` stays
+# A cask rather than a formula because this is an app bundle. `Formula/hooty-server.rb` stays
 # where it is and ships the CLI — the two are the same daemon, and a machine may want either.
 #
 # The stanza order below is Homebrew's, not a preference: `brew style`'s Cask/StanzaOrder cop
 # rejects any other, and `livecheck` in particular belongs above `depends_on`.
 cask "hooty" do
-  version "0.0.28"
-  sha256 "cefa9ce776b3f1dffc1516e48ae80629f731c78e5115f30aab027696e9f4903d"
+  version "0.0.29"
+  sha256 "8b01da36a447927c2c08d8e4f1a5c57dc7bd3a8b4be491b8e72d346a707db649"
 
   # `#{version}` rather than the whole URL spelled out: `brew audit` reads a url that does not
   # mention the version as an *unversioned* one and asks for `sha256 :no_check`, which would
   # mean shipping an image nothing checks. The tag is substituted whole because a packaging
   # revision moves it and not the version (`server/release.sh --revision=`).
-  url "https://github.com/KQAR/homebrew-coda/releases/download/v0.0.28/coda-#{version}.dmg"
-  name "coda"
+  url "https://github.com/KQAR/homebrew-hooty/releases/download/v0.0.29/hooty-#{version}.dmg"
+  name "Hooty"
   # No platform in a cask's description — `brew style`'s Cask/Desc cop rejects "Mac", which
   # is how the formula next door words the same sentence.
   desc "Drive your coding agents from your phone"
-  homepage "https://github.com/KQAR/homebrew-coda"
+  homepage "https://hooty.kqar.cc/"
 
   # A packaging revision is a suffix on the *tag*, never on the version — the same binary
   # under a new tag is what `server/release.sh --revision=` cuts, because a published asset is
@@ -50,14 +52,15 @@ cask "hooty" do
   depends_on arch: :arm64
   depends_on macos: :tahoe
 
-  app "coda.app"
+  app "Hooty.app"
 
   # Quit it before the bundle is replaced. A running copy holds udp/51820 and the keychain
   # its TLS key lives in; swapping the bundle underneath leaves a process whose code is no
   # longer on disk. And the login item is the app's own **Start at Login** switch
-  # (`SMAppService.mainApp`), which would otherwise be left pointing at an app that is gone.
+  # (`SMAppService.mainApp`), which would otherwise be left pointing at an app that is gone —
+  # under either name, since one switched on before 0.0.29 is listed as coda.
   uninstall quit:       "tech.kqar.coda.server",
-            login_item: "coda"
+            login_item: ["Hooty", "coda"]
 
   # `~/.coda` is the host key, the phones' enrolments and the tunnel key — everything a
   # paired phone pinned. It is in `zap`, which is opt-in (`brew uninstall --zap`), and not in
@@ -70,15 +73,15 @@ cask "hooty" do
   caveats do
     <<~EOS
       Open it. It lives in the menu bar and has no Dock icon; use **Pairing code…** in
-      its menu and scan that with coda on your phone.
+      its menu and scan that with Hooty on your phone.
 
       It serves udp/51820 and attaches to the Herdr and Orca sessions you already run — it
       never starts one of its own. Its state, including the host key, is in ~/.coda.
 
-      You do not also need `coda-server`: this app is the daemon. That formula is for a machine
+      You do not also need `hooty-server`: this app is the daemon. That formula is for a machine
       with no graphical session, where a status item cannot run. Do not run both — one port,
       one daemon. Each looks before it binds: the app tells you whose port it is and offers
-      to take it over, and `coda-server run` waits (or, in a terminal, refuses).
+      to take it over, and `hooty-server run` waits (or, in a terminal, refuses).
     EOS
   end
 end
