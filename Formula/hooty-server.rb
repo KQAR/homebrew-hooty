@@ -18,8 +18,8 @@
 class HootyServer < Formula
   desc "Host daemon for Hooty: drive the coding agents on your Mac from your phone"
   homepage "https://hooty.kqar.cc/"
-  url "https://github.com/KQAR/homebrew-hooty/releases/download/v0.0.35/hooty-server-0.0.35-arm64.tar.gz"
-  sha256 "de20f94f913ae6a85d911ea4ed5e0b79d1098bf535f21950e17116117fc28772"
+  url "https://github.com/KQAR/homebrew-hooty/releases/download/v0.0.36/hooty-server-0.0.36-arm64.tar.gz"
+  sha256 "ff70e04bb85f8c3897b0a7560a555f8c1e0011052cb6f3e54d51769fcd034f87"
 
   # Apple silicon only. The tarball carries one slice; an x86_64 one that nothing here can
   # execute would be a claim rather than support (`server/release.sh`), and without this a
